@@ -27,11 +27,7 @@ pipeline {
 			}
 			steps {
 				step {
-					def testFlags = "-PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE}"
-					testFlags += " -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
-					testFlags += " -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD}"
-					testFlags += " -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
-					sh "./gradlew test"
+					sh "./gradlew test -PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE} -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
 				}
 			}
 		}
