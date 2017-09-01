@@ -26,9 +26,7 @@ pipeline {
 				BUILD_KEYSTORE_PASSWORD = credentials('build_keystore_password')
 			}
 			steps {
-				step {
-					sh "./gradlew test -PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE} -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
-				}
+				sh "./gradlew test -PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE} -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD} -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
 			}
 		}
 
