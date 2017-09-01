@@ -7,7 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath "net.saliman:gradle-cobertura-plugin:2.3.2" 
+		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
@@ -16,7 +16,7 @@ apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: 'maven'
-apply plugin: 'net.saliman.cobertura'
+apply plugin: 'docker'
 
 ext {
     mainClassName = 'edu.hail.BootApplication'
@@ -29,21 +29,11 @@ configurations {
 
 jar {
 	baseName = "${appName}"
-	version = "${version}"
+	version = null
 }
 
 test {
 }
-
-cobertura {
-	coverageFormats = ['html', 'xml']              
-	coverageIgnoreTrivial = true                   
-	coverageIgnores = ['org.slf4j.Logger.*']           
-	coverageReportDir = file("$buildDir/reports/cobertura")    
-	
-}
-
-test.finalizedBy(project.tasks.cobertura)
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -124,4 +114,9 @@ task deploy(type: Exec) {
 
 def deploymentEnabled() {
  return project.hasProperty('deployUrl') && project.hasProperty('deployPath') && project.hasProperty('deployUser') && project.hasProperty('deployKey')
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+  applicationName = jar.baseName
+  dockerfile = file('Dockerfile')
 }
