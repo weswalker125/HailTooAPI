@@ -32,25 +32,18 @@ pipeline {
 
 		stage('check') {
 			steps {
-				step {
-					echo "todo"
-				}
+				echo "todo"
 			}
 		}
 
 		stage('package') {
 			steps {
-				step {
-					sh "./gradlew build"
-				}
+				sh "./gradlew build"
 				// make release?
 				//upload java artifact ?
 
-				step {
-					// Build docker image
-					sh "./gradlew buildDocker"
-				}
-
+				// Build docker image
+				sh "./gradlew buildDocker"
 				//docker push?
 			}
 		}
@@ -60,9 +53,7 @@ pipeline {
 				branch 'production'
 			}
 			steps {
-				step {
-					echo 'todo - deploy to production machine'
-				}
+				echo 'todo - deploy to production machine'
 			}
 		}
 	}
