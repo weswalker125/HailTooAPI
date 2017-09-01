@@ -26,28 +26,36 @@ pipeline {
 				BUILD_KEYSTORE_PASSWORD = credentials('build_keystore_password')
 			}
 			steps {
-				def testFlags = "-PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE}"
-				testFlags += " -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
-				testFlags += " -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD}"
-				testFlags += " -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
-				sh "./gradlew test"
+				step {
+					def testFlags = "-PjvmArgs.javax.net.ssl.keystore=${env.BUILD_KEYSTORE}"
+					testFlags += " -PjvmArgs.javax.net.ssl.keystorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
+					testFlags += " -PjvmArgs.javax.net.ssl.trustStore=${env.BUILD_KEYSTORE_PASSWORD}"
+					testFlags += " -PjvmArgs.javax.net.ssl.trustStorePassword=${env.BUILD_KEYSTORE_PASSWORD}"
+					sh "./gradlew test"
+				}
 			}
 		}
 
 		stage('check') {
 			steps {
-				echo "todo"
+				step {
+					echo "todo"
+				}
 			}
 		}
 
 		stage('package') {
 			steps {
-				sh "./gradlew build"
+				step {
+					sh "./gradlew build"
+				}
 				// make release?
 				//upload java artifact ?
 
-				// Build docker image
-				sh "./gradlew buildDocker"
+				step {
+					// Build docker image
+					sh "./gradlew buildDocker"
+				}
 
 				//docker push?
 			}
@@ -58,13 +66,15 @@ pipeline {
 				branch 'production'
 			}
 			steps {
-				echo 'todo - deploy to production machine'
+				step {
+					echo 'todo - deploy to production machine'
+				}
 			}
 		}
 	}
 	post {
 		always {
-
+			echo "done"
 		}
 		changed {
 			echo 'todo - notify slack channel'
