@@ -5,7 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 public class BootApplication {
 
     private static final Log log = LogFactory.getLog(BootApplication.class);
-    private static String version;
     private static Properties properties;
     protected static SecretKey jwtSecret;
 
@@ -53,9 +52,7 @@ public class BootApplication {
         properties = new Properties();
         try {
         	properties.load(BootApplication.class.getResourceAsStream("/application.properties"));
-			version = properties.getProperty("application.version");
 		} catch (IOException e) {
-			version = "N/A";
 			log.error("Unable to read from property files.", e);
 		}
         
@@ -87,12 +84,7 @@ public class BootApplication {
         ret = String.format("http://localhost:%s%s", properties.getProperty("server.port"), properties.getProperty("server.context-path"));
         return ret;
     }
-    
-    @RequestMapping(value = "/version", method = RequestMethod.GET)
-    public @ResponseBody String getAppVersion() {
-    	return version;
-    }
-    
+        
     /**
      * On first load, generate a JWT (JSON Web Token) to be used
      * to authenticate further requests.

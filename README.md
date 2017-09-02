@@ -6,7 +6,7 @@
 2. ~~Build with gradle: ```./gradlew build```~~
 3. ~~Launch the app: ```./gradlew bootRun```~~
 2. Build the container: `./gradlew buildDocker`
-3. Launch the app: `docker run -p 8454:8454 -t hailtooapi`
+3. Launch the app: `docker run -p 8454:8454 -t com.dubyatoo.edu/hailtooapi:1.0.0`
 
 
 ## Current state

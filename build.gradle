@@ -1,6 +1,5 @@
 buildscript {
 	ext {
-		springBootVersion = '1.3.3.RELEASE'
 		wwNexus = 'http://localhost:8081'
 		registry = 'http://localhost:18433/docker-local'
 	}
@@ -8,17 +7,23 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
-apply plugin: 'maven'
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'maven'
+    id 'org.springframework.boot' version '1.5.6.RELEASE'
+}
+
 apply plugin: 'docker'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+group = 'com.dubyatoo.edu'
+version = '1.0.0'
 
 ext {
     mainClassName = 'edu.hail.BootApplication'
@@ -34,17 +39,12 @@ jar {
 	version = null
 }
 
-test {
-}
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	compile('org.springframework.boot:spring-boot-starter-actuator') 
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('io.jsonwebtoken:jjwt:0.6.0')
     compile('com.google.code.gson:gson:2.6.2')
@@ -58,17 +58,6 @@ dependencies {
 bootRun {
     //deploy static resources in-place
 	addResources = true
-}
-
-task bootDebug(type: org.springframework.boot.gradle.run.BootRunTask) {
-    doFirst() {
-        jvmArgs '-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8000'
-    }
-    
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '2.12'
 }
 
 task createApplicationProperties() {
