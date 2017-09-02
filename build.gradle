@@ -1,6 +1,8 @@
 buildscript {
 	ext {
 		springBootVersion = '1.3.3.RELEASE'
+		wwNexus = 'http://localhost:8081'
+		registry = 'http://localhost:18433/docker-local'
 	}
 	repositories {
 		mavenCentral()
@@ -20,7 +22,7 @@ apply plugin: 'docker'
 
 ext {
     mainClassName = 'edu.hail.BootApplication'
-    appName = 'HailToo'
+    appicationName = 'HailToo'
 }
 
 configurations {
@@ -28,7 +30,7 @@ configurations {
 }
 
 jar {
-	baseName = "${appName}"
+	baseName = "${appicationName}"
 	version = null
 }
 
@@ -79,7 +81,7 @@ task createApplicationProperties() {
 	props.put('application.version', project['version'])
 	
 	def file = new File("${projectDir}/src/main/resources/application.properties")
-	props.store(file.newWriter(), "$appName properties")
+	props.store(file.newWriter(), "$appicationName properties")
 }
 build.dependsOn createApplicationProperties
 
@@ -117,6 +119,15 @@ def deploymentEnabled() {
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
-  applicationName = jar.baseName
-  dockerfile = file('Dockerfile')
+	// container tag has to be lower case...
+	applicationName = "$applicationName".toLowerCase()
+	dockerfile = file('Dockerfile')
+	// copies archive to build/docker/target/ 
+	// for Dockerfile to have relative path.
+	doFirst {
+		copy {
+			from jar
+			into "${stageDir}/target"
+		}
+	}
 }

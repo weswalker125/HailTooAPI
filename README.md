@@ -3,8 +3,11 @@
 ## To build
 
 1. Clone the project: ```git clone git@github.com:HailToo/HailTooAPI.git```
-2. Build with gradle: ```./gradlew build```
-3. Launch the app: ```./gradlew bootRun```
+2. ~~Build with gradle: ```./gradlew build```~~
+3. ~~Launch the app: ```./gradlew bootRun```~~
+2. Build the container: `./gradlew buildDocker`
+3. Launch the app: `docker run -p 8454:8454 -t hailtooapi`
+
 
 ## Current state
 
