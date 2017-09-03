@@ -38,12 +38,11 @@ pipeline {
 
 		stage('package') {
 			steps {
-				sh "./gradlew build"
 				// make release?
 				//upload java artifact ?
 
 				// Build docker image
-				sh "./gradlew buildDocker"
+				sh "./gradlew containerize"
 				//docker push?
 			}
 		}
