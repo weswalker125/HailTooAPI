@@ -1,16 +1,3 @@
-buildscript {
-	ext {
-		wwNexus = 'http://localhost:8081'
-		registry = 'http://localhost:18433/docker-local'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath('se.transmode.gradle:gradle-docker:1.2')
-	}
-}
-
 plugins {
 	id 'java'
 	id 'eclipse'
@@ -18,16 +5,13 @@ plugins {
     id 'org.springframework.boot' version '1.5.6.RELEASE'
 }
 
-apply plugin: 'docker'
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 group = 'com.dubyatoo.edu'
-version = '1.0.0'
 
 ext {
     mainClassName = 'edu.hail.BootApplication'
-    appicationName = 'HailToo'
+    applicationName = 'HailToo'
 }
 
 configurations {
@@ -35,7 +19,7 @@ configurations {
 }
 
 jar {
-	baseName = "${appicationName}"
+	baseName = "${applicationName}"
 	version = null
 }
 
@@ -59,20 +43,6 @@ bootRun {
     //deploy static resources in-place
 	addResources = true
 }
-
-task createApplicationProperties() {
-	def props = new Properties()
-	props.put('server.port', '8454')
-	props.put('server.context-path', '/hail/')
-	props.put('spring.mvc.throw-exception-if-no-handler-found', 'true')
-	
-	//volatile properties (change per build)
-	props.put('application.version', project['version'])
-	
-	def file = new File("${projectDir}/src/main/resources/application.properties")
-	props.store(file.newWriter(), "$appicationName properties")
-}
-build.dependsOn createApplicationProperties
 
 uploadArchives {
     repositories.mavenDeployer {
@@ -107,16 +77,8 @@ def deploymentEnabled() {
  return project.hasProperty('deployUrl') && project.hasProperty('deployPath') && project.hasProperty('deployUser') && project.hasProperty('deployKey')
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-	// container tag has to be lower case...
-	applicationName = "$applicationName".toLowerCase()
-	dockerfile = file('Dockerfile')
-	// copies archive to build/docker/target/ 
-	// for Dockerfile to have relative path.
-	doFirst {
-		copy {
-			from jar
-			into "${stageDir}/target"
-		}
-	}
+task containerize(type: Exec) {
+	dependsOn build
+	executable "sh"
+	args "-c", "docker build -t ${project.group}/$applicationName:$version .".toLowerCase()
 }
